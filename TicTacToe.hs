@@ -65,8 +65,15 @@ diags (cs, n)
 -------------------------------------------------------------------
 
 gameOver :: Board -> Bool
-gameOver
-  = undefined
+gameOver board
+  = or rs || or cs || or ds 
+  where
+    rs = checkLine rows 
+    cs = checkLine cols 
+    ds = checkLine diags 
+    checkLine :: (Board -> [[Cell]]) -> [Bool]
+    checkLine lines 
+      = [nub line == [Taken O] || nub line == [Taken X]  | line <- (lines board)]
 
 -------------------------------------------------------------------
 
@@ -75,8 +82,10 @@ gameOver
 -- separated by whitespace. Bounds checking happens in tryMove, not here.
 --
 parsePosition :: String -> Maybe Position
-parsePosition
-  = undefined
+parsePosition pos
+  = readMaybe pos' :: Maybe Position
+  where
+    pos' = '(' : takeWhile (not . isSpace) pos ++ "," ++ dropWhile (not . isSpace) pos ++ ")"
 
 tryMove :: Player -> Position -> Board -> Maybe Board
 tryMove
