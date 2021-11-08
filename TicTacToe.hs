@@ -88,8 +88,11 @@ parsePosition pos
     pos' = '(' : takeWhile (not . isSpace) pos ++ "," ++ dropWhile (not . isSpace) pos ++ ")"
 
 tryMove :: Player -> Position -> Board -> Maybe Board
-tryMove
-  = undefined
+tryMove plr (i, j) (cells, n) 
+  | index < 0 || index >= n ^ 2 || (cells !! index) /= Empty = Nothing
+  | otherwise = Just (replace index (Taken plr) cells, n) 
+  where
+    index = i * n + j
 
 -------------------------------------------------------------------
 -- I/O Functions
