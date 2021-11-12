@@ -63,9 +63,7 @@ diags (cs, n)
   = map (map (cs !!)) [[k * (n + 1) | k <- [0 .. n - 1]],
                       [k * (n - 1) | k <- [1 .. n]]]
 
-constructBoard :: Int -> Board
-constructBoard n
-  = ([Empty | count <- [1..n*n]], n)
+
   
 -------------------------------------------------------------------
 
@@ -174,6 +172,11 @@ main
       n <- doParseAction parseSize "Invalid board size, try again: "
       let board = constructBoard n 
       playGame (constructBoard n) X
+  where
+    constructBoard :: Int -> Board
+    constructBoard n
+      = ([Empty | count <- [1..n*n]], n)
+
 
 
 -------------------------------------------------------------------
