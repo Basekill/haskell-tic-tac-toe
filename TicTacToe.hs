@@ -148,9 +148,13 @@ takeTurn :: Board -> Player -> IO Board
 takeTurn board plr
   = do
       putStr ("Player " ++ show plr ++ ", make your move (row col): ")
-      doParseAction "Invalid move, try again: " (\line -> do
-                                                            pos <- parsePosition line
-                                                            tryMove plr pos board)
+      -- The two below are equivalent
+      -- Using do
+      -- doParseAction "Invalid move, try again: " (\line -> do
+      --                                                       pos <- parsePosition line
+      --                                                       tryMove plr pos board)
+      -- Using >>=
+      doParseAction "Invalid move, try again: " (\line -> parsePosition line >>= (\pos -> tryMove plr pos board))
     
 -- Manage a game by repeatedly: 1. printing the current board, 2. using
 -- takeTurn to return a modified board, 3. checking if the game is over,
@@ -162,10 +166,8 @@ playGame board plr
       prettyPrint board 
       board' <- takeTurn board plr
       case (gameOver board', isFull board') of
-        (True, _) -> do
-                       displayEnd ("Player " ++ show plr ++ " has won!") board'
-        (_, True) -> do
-                       displayEnd "It's a draw!" board'
+        (True, _) -> displayEnd ("Player " ++ show plr ++ " has won!") board'
+        (_, True) -> displayEnd "It's a draw!" board'
         _ -> playGame board' (switchPlayer plr)
   where
     displayEnd :: String -> Board -> IO ()
