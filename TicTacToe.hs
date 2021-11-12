@@ -8,10 +8,15 @@ import Debug.Trace
 
 -------------------------------------------------------------------
 data Player = O | X
-            deriving (Eq, Show, Enum)
+            deriving (Eq, Show)
 
 data Cell = Empty | Taken Player
-          deriving (Eq, Show)
+          deriving (Eq)
+
+instance Show Cell where
+  show Empty = "-"
+  show (Taken X) = "X"
+  show (Taken O) = "O"
 
 type Board = ([Cell], Int)
 
@@ -69,7 +74,7 @@ diags (cs, n)
 
 gameOver :: Board -> Bool
 gameOver board
-  = or ((checkLine rows) ++ (checkLine cols) ++ (checkLine diags))
+  = or (checkLine rows) || or (checkLine cols) || or (checkLine diags)
   where
     checkLine :: (Board -> [[Cell]]) -> [Bool]
     checkLine lines 
@@ -78,6 +83,12 @@ gameOver board
 isFull :: Board -> Bool
 isFull (cells, _)
   = and (map (/=Empty) cells)
+
+switchPlayer :: Player -> Player
+switchPlayer O
+  = X
+switchPlayer X
+  = O
 
 -------------------------------------------------------------------
 
@@ -107,6 +118,7 @@ tryMove plr (i, j) (cells, n)
 -------------------------------------------------------------------
 -- I/O Functions
 
+-- Prints a given board
 prettyPrint :: Board -> IO ()
 prettyPrint board
   = putStr (concat lines)
@@ -116,9 +128,7 @@ prettyPrint board
     prettyPrint' []
       = "\n"
     prettyPrint' (x : xs)
-      | x == Taken X = 'X' : prettyPrint' xs
-      | x == Taken O = 'O' : prettyPrint' xs
-      | otherwise = '-' : prettyPrint' xs
+      = show x ++ prettyPrint' xs
 
 -- The following reflect the suggested structure, but you can manage the game
 -- in any way you see fit.
@@ -128,7 +138,6 @@ doParseAction errorMsg parse
   = do
        line <- getLine
        let input = parse line
-       -- need to also check the validity of the given input
        maybe (do 
                 putStr errorMsg
                 doParseAction errorMsg parse) return input
@@ -142,10 +151,6 @@ takeTurn board plr
       doParseAction "Invalid move, try again: " (\line -> do
                                                             pos <- parsePosition line
                                                             tryMove plr pos board)
---                       let board' = tryMove plr pos board
---                       maybe (do 
---                                 putStrLn "Invalid position"
---                                 takeTurn board plr) return board'
     
 -- Manage a game by repeatedly: 1. printing the current board, 2. using
 -- takeTurn to return a modified board, 3. checking if the game is over,
@@ -169,13 +174,7 @@ playGame board plr
           prettyPrint board
           putStrLn msg
           putStrLn ("Thank you for playing")
-    switchPlayer :: Player -> Player
-    switchPlayer O
-      = X
-    switchPlayer X
-      = O
-
-
+ 
 -- Print a welcome message, read the board dimension, invoke playGame and
 -- exit with a suitable message.
 main :: IO ()
@@ -184,7 +183,6 @@ main
       putStrLn "Welcome to tic tac toe on an N x N board"
       putStr "Enter the board size (N): "
       n <- doParseAction "Invalid board size, try again: " parseSize
-      let board = constructBoard n 
       playGame (constructBoard n) X
   where
     -- constructs an empty board of size n
