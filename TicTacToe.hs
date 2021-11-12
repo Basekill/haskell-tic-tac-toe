@@ -73,7 +73,7 @@ gameOver board
   where
     checkLine :: (Board -> [[Cell]]) -> [Bool]
     checkLine lines 
-      = [nub line == [Taken O] || nub line == [Taken X]  | line <- (lines board)]
+      = [nub line == [Taken O] || nub line == [Taken X] | line <- (lines board)]
 
 isFull :: Board -> Bool
 isFull (cells, _)
@@ -123,27 +123,29 @@ prettyPrint board
 -- The following reflect the suggested structure, but you can manage the game
 -- in any way you see fit.
 
-doParseAction :: (String -> Maybe a) -> String -> IO a
-doParseAction parse errorMsg
+doParseAction :: String -> (String -> Maybe a) -> IO a
+doParseAction errorMsg parse
   = do
        line <- getLine
        let input = parse line
        -- need to also check the validity of the given input
        maybe (do 
                 putStr errorMsg
-                doParseAction parse errorMsg) return input
+                doParseAction errorMsg parse) return input
 
 -- Repeatedly read a target board position and invoke tryMove until
 -- the move is successful (Just ...).
 takeTurn :: Board -> Player -> IO Board
 takeTurn board plr
   = do
-                      putStr ("Player " ++ show plr ++ ", make your move (row col): ")
-                      pos <- doParseAction parsePosition "Invalid move, try again: "
-                      let board' = tryMove plr pos board
-                      maybe (do 
-                                putStrLn "Invalid position"
-                                takeTurn board plr) return board'
+      putStr ("Player " ++ show plr ++ ", make your move (row col): ")
+      doParseAction "Invalid move, try again: " (\line -> do
+                                                            pos <- parsePosition line
+                                                            tryMove plr pos board)
+--                       let board' = tryMove plr pos board
+--                       maybe (do 
+--                                 putStrLn "Invalid position"
+--                                 takeTurn board plr) return board'
     
 -- Manage a game by repeatedly: 1. printing the current board, 2. using
 -- takeTurn to return a modified board, 3. checking if the game is over,
@@ -154,17 +156,24 @@ playGame board plr
   = do
       prettyPrint board 
       board' <- takeTurn board plr
-      if gameOver board'
-        then do
-               prettyPrint board'
-               putStrLn ("Player " ++ show plr ++ " has won!")
-               putStrLn ("Thank you for playing")
-        else if isFull board'
-               then do
-               prettyPrint board'
-               putStrLn ("It's a draw!")
-               putStrLn ("Thank you for playing")
-        else playGame board' (toEnum (((fromEnum plr) + 1) `mod` 2))
+      case (gameOver board', isFull board') of
+        (True, _) -> do
+                       displayEnd ("Player " ++ show plr ++ " has won!") board'
+        (_, True) -> do
+                       displayEnd "It's a draw!" board'
+        _ -> playGame board' (switchPlayer plr)
+  where
+    displayEnd :: String -> Board -> IO ()
+    displayEnd msg board
+      = do
+          prettyPrint board
+          putStrLn msg
+          putStrLn ("Thank you for playing")
+    switchPlayer :: Player -> Player
+    switchPlayer O
+      = X
+    switchPlayer X
+      = O
 
 
 -- Print a welcome message, read the board dimension, invoke playGame and
@@ -174,7 +183,7 @@ main
   = do 
       putStrLn "Welcome to tic tac toe on an N x N board"
       putStr "Enter the board size (N): "
-      n <- doParseAction parseSize "Invalid board size, try again: "
+      n <- doParseAction "Invalid board size, try again: " parseSize
       let board = constructBoard n 
       playGame (constructBoard n) X
   where
