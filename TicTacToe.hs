@@ -69,11 +69,8 @@ diags (cs, n)
 
 gameOver :: Board -> Bool
 gameOver board
-  = or rs || or cs || or ds 
+  = or ((checkLine rows) ++ (checkLine cols) ++ (checkLine diags))
   where
-    rs = checkLine rows 
-    cs = checkLine cols 
-    ds = checkLine diags 
     checkLine :: (Board -> [[Cell]]) -> [Bool]
     checkLine lines 
       = [nub line == [Taken O] || nub line == [Taken X]  | line <- (lines board)]
@@ -90,13 +87,12 @@ parsePosition pos
   where
     pos' = '(' : takeWhile (not . isSpace) pos ++ "," ++ dropWhile (not . isSpace) pos ++ ")"
 
+-- Given an input string determines whether it is a positive integer
 parseSize :: String -> Maybe Int
 parseSize size
-  | n > 0 = Just n 
-  | otherwise = Nothing
-  where
-    n = fromMaybe 0 (readMaybe size :: Maybe Int)
+  = filterMaybe (>0) (readMaybe size :: Maybe Int)
 
+-- Tries to write the given player's marker at the given board position
 tryMove :: Player -> Position -> Board -> Maybe Board
 tryMove plr (i, j) (cells, n) 
   | i < 0 || j < 0 || i >= n || j >= n || (cells !! index) /= Empty = Nothing
@@ -116,9 +112,9 @@ prettyPrint board
     prettyPrint' []
       = "\n"
     prettyPrint' (x : xs)
-      | x == Empty = '-' : prettyPrint' xs
+      | x == Taken X = 'X' : prettyPrint' xs
       | x == Taken O = 'O' : prettyPrint' xs
-      | otherwise = 'X' : prettyPrint' xs
+      | otherwise = '-' : prettyPrint' xs
 
 -- The following reflect the suggested structure, but you can manage the game
 -- in any way you see fit.
@@ -173,6 +169,7 @@ main
       let board = constructBoard n 
       playGame (constructBoard n) X
   where
+    -- constructs a board of size n
     constructBoard :: Int -> Board
     constructBoard n
       = ([Empty | count <- [1..n*n]], n)
