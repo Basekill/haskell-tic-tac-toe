@@ -75,6 +75,10 @@ gameOver board
     checkLine lines 
       = [nub line == [Taken O] || nub line == [Taken X]  | line <- (lines board)]
 
+isFull :: Board -> Bool
+isFull (cells, _)
+  = and (map (/=Empty) cells)
+
 -------------------------------------------------------------------
 
 --
@@ -155,6 +159,11 @@ playGame board plr
                prettyPrint board'
                putStrLn ("Player " ++ show plr ++ " has won!")
                putStrLn ("Thank you for playing")
+        else if isFull board'
+               then do
+               prettyPrint board'
+               putStrLn ("It's a draw!")
+               putStrLn ("Thank you for playing")
         else playGame board' (toEnum (((fromEnum plr) + 1) `mod` 2))
 
 
@@ -169,7 +178,7 @@ main
       let board = constructBoard n 
       playGame (constructBoard n) X
   where
-    -- constructs a board of size n
+    -- constructs an empty board of size n
     constructBoard :: Int -> Board
     constructBoard n
       = ([Empty | count <- [1..n*n]], n)
@@ -199,3 +208,9 @@ testBoard3
       Taken O,Taken X,Empty,Empty,Taken X,
       Taken X,Empty,Taken O,Empty,Empty],
       5)
+
+testBoard4
+  = ([Taken X,Taken O,Taken X,
+      Taken X,Taken O,Taken O,
+      Taken O,Taken X,Taken X],
+      3 :: Int)
