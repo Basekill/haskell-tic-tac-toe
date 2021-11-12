@@ -168,7 +168,7 @@ playGame board plr
       case (gameOver board', isFull board') of
         (True, _) -> displayEnd ("Player " ++ show plr ++ " has won!") board'
         (_, True) -> displayEnd "It's a draw!" board'
-        _ -> playGame board' (switchPlayer plr)
+        _         -> playGame board' (switchPlayer plr)
   where
     displayEnd :: String -> Board -> IO ()
     displayEnd msg board
