@@ -2,7 +2,8 @@
 
 # Prerequisites
 
-In order to run the program, you will need to install the Haskell GHC compiler.
+In order to run the program, you will need to install GHC.
+You can download it from the following website:
 
 https://www.haskell.org/downloads/
 
