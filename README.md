@@ -8,6 +8,10 @@ https://www.haskell.org/downloads/
 
 # Getting Started
 
+Start by cloning the project by running the following command:
+
+ `git clone https://github.com/Basekill/haskell-tic-tac-toe.git`
+
 Once in the project directory, start the tic tac toe program by running the command:
 
 `runghc TicTacToe.hs`
