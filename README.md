@@ -35,3 +35,4 @@ Each player continues making moves until one player wins or we have a draw.
 # Credits
 
 `IC/TestSuite.hs` is the test suite made by Imperial College London.
+The Tic Tac Toe program is based off of the skeleton files provided by Imperial College London.
