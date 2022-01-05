@@ -32,6 +32,18 @@ Each player continues making moves until one player wins or we have a draw.
 
 <img width="462" alt="image" src="https://user-images.githubusercontent.com/62472947/148195258-114e6784-678c-4e39-8f84-17d5a65de711.png">
 
+# Modifying the Program
+
+The program can be edited by modifying the `TicTacToe.hs` file.
+
+# Testing
+
+The tests can be run by using the following command:
+
+`runghc Tests.hs`
+
+Extra tests can be added by modifying the `Tests.hs` file.
+
 # Credits
 
 `IC/TestSuite.hs` is the test suite made by Imperial College London.
