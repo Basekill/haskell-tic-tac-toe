@@ -47,4 +47,5 @@ Extra tests can be added by modifying the `Tests.hs` file.
 # Credits
 
 `IC/TestSuite.hs` is the test suite made by Imperial College London.
+
 The Tic Tac Toe program is based off of the skeleton files provided by Imperial College London.
