@@ -130,9 +130,6 @@ prettyPrint board
     prettyPrint' (x : xs)
       = show x ++ prettyPrint' xs
 
--- The following reflect the suggested structure, but you can manage the game
--- in any way you see fit.
-
 doParseAction :: String -> (String -> Maybe a) -> IO a
 doParseAction errorMsg parse
   = do
@@ -148,12 +145,6 @@ takeTurn :: Board -> Player -> IO Board
 takeTurn board plr
   = do
       putStr ("Player " ++ show plr ++ ", make your move (row col): ")
-      -- The two below are equivalent
-      -- Using do
-      -- doParseAction "Invalid move, try again: " (\line -> do
-      --                                                       pos <- parsePosition line
-      --                                                       tryMove plr pos board)
-      -- Using >>=
       doParseAction "Invalid move, try again: " (\line -> parsePosition line >>= (\pos -> tryMove plr pos board))
     
 -- Manage a game by repeatedly: 1. printing the current board, 2. using
