@@ -2,15 +2,11 @@
 
 # Prerequisites
 
-In order to run the program, you will need to install the haskell GHC compiler.
+In order to run the program, you will need to install the Haskell GHC compiler.
 
 https://www.haskell.org/downloads/
 
 # Getting Started
-
-Start by cloning the project by running the following command:
-
-`git clone https://github.com/Basekill/haskell-tic-tac-toe.git`
 
 Once in the project directory, start the tic tac toe program by running the command:
 
@@ -31,3 +27,7 @@ Make a move by entering a row and column index (separated by a space). As an exa
 Each player continues making moves until one player wins or we have a draw.
 
 <img width="462" alt="image" src="https://user-images.githubusercontent.com/62472947/148195258-114e6784-678c-4e39-8f84-17d5a65de711.png">
+
+# Credits
+
+`IC/TestSuite.hs` is the test suite made by Imperial College London.
