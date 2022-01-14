@@ -121,14 +121,8 @@ tryMove plr (i, j) (cells, n)
 -- Prints a given board
 prettyPrint :: Board -> IO ()
 prettyPrint board
-  = putStr (concat lines)
-  where
-    lines = [intersperse ' ' (prettyPrint' row) | row <- rows board]
-    prettyPrint' :: [Cell] -> String
-    prettyPrint' []
-      = "\n"
-    prettyPrint' (x : xs)
-      = show x ++ prettyPrint' xs
+  = putStr (concat 
+    [intersperse ' ' (concatMap show row ++ "\n") | row <- rows board])
 
 doParseAction :: String -> (String -> Maybe a) -> IO a
 doParseAction errorMsg parse
