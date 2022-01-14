@@ -78,7 +78,7 @@ gameOver board
   where
     checkLine :: (Board -> [[Cell]]) -> [Bool]
     checkLine lines 
-      = [nub line == [Taken O] || nub line == [Taken X] | line <- (lines board)]
+      = [True | [Taken _] <- map nub (lines board)]
 
 isFull :: Board -> Bool
 isFull (cells, _)
