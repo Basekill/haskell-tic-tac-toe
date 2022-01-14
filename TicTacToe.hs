@@ -139,7 +139,8 @@ takeTurn :: Board -> Player -> IO Board
 takeTurn board plr
   = do
       putStr ("Player " ++ show plr ++ ", make your move (row col): ")
-      doParseAction "Invalid move, try again: " (\line -> parsePosition line >>= (\pos -> tryMove plr pos board))
+      doParseAction "Invalid move, try again: " (\line -> parsePosition line >>= 
+                                                (\pos -> tryMove plr pos board))
     
 -- Manage a game by repeatedly: 1. printing the current board, 2. using
 -- takeTurn to return a modified board, 3. checking if the game is over,
@@ -160,7 +161,7 @@ playGame board plr
       = do
           prettyPrint board
           putStrLn msg
-          putStrLn ("Thank you for playing")
+          putStrLn "Thank you for playing"
  
 -- Print a welcome message, read the board dimension, invoke playGame and
 -- exit with a suitable message.
@@ -170,14 +171,8 @@ main
       putStrLn "Welcome to tic tac toe on an N x N board"
       putStr "Enter the board size (N): "
       n <- doParseAction "Invalid board size, try again: " parseSize
-      playGame (constructBoard n) X
-  where
-    -- constructs an empty board of size n
-    constructBoard :: Int -> Board
-    constructBoard n
-      = ([Empty | count <- [1..n*n]], n)
-
-
+      -- Plays game with an Empty board of size n x n
+      playGame (replicate (n * n) Empty, n) X
 
 -------------------------------------------------------------------
 
