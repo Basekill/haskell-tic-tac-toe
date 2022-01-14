@@ -82,7 +82,7 @@ gameOver board
 
 isFull :: Board -> Bool
 isFull (cells, _)
-  = and (map (/=Empty) cells)
+  = Empty `notElem` cells
 
 switchPlayer :: Player -> Player
 switchPlayer O
