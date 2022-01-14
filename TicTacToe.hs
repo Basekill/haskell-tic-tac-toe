@@ -98,9 +98,9 @@ switchPlayer X
 --
 parsePosition :: String -> Maybe Position
 parsePosition pos
-  = readMaybe pos' :: Maybe Position
+  = readMaybe ('(' : a ++ "," ++ b ++ ")") :: Maybe Position
   where
-    pos' = '(' : takeWhile (not . isSpace) pos ++ "," ++ dropWhile (not . isSpace) pos ++ ")"
+    (a, b) = break isSpace pos
 
 -- Given an input string determines whether it is a positive integer
 parseSize :: String -> Maybe Int
